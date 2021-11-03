@@ -10,11 +10,11 @@ on:
   workflow_dispatch:
 
 env:
-  MANIFEST: git://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git
+  MANIFEST: https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git
   MANIFEST_BRANCH: twrp-11
-  DEVICE: RMX2151
+  DEVICE: RMX2156
   DT_LINK: https://github.com/noobyysauraj/twrp_RMX2151_a11
-  DT_PATH: device/realme/RMX2151
+  DT_PATH: device/realme/RMX2156
   TARGET: recoveryimage
   TZ: Asia/Kolkata
 
@@ -47,6 +47,16 @@ jobs:
         repo sync -j4
         repo sync
         git clone $DT_LINK --depth=1 --single-branch $DT_PATH
+        sed -i "s/RMX2151/RMX2156/" devi*/re*/*/*.mk
+        #mv devi*/re*/* RMX2156
+        cd devi*/re*/*
+        mv twrp*.mk twrp_RMX2156.mk
+        cd preb*
+        rm kernel
+        rm dtbo*
+        aria2c https://gitlab.com/sauraj-dumps/alps_oppo6785_dump_2266/-/raw/sys_oplus_mssi_64_cn-user-11-RP1A.200720.011-1614320228960-release-keys/boot/kernel?inline=false
+        aria2c https://gitlab.com/sauraj-dumps/alps_oppo6785_dump_2266/-/raw/sys_oplus_mssi_64_cn-user-11-RP1A.200720.011-1614320228960-release-keys/dtbo.img?inline=false
+        cd ../../../..
 
     - name: Build
       run: |
